@@ -1,0 +1,5 @@
+*.pyc
+
+build/
+subprojects/
+admin/__pycache__/
