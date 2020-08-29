@@ -5,9 +5,9 @@
 #include <signal.h>
 #include <chrono>
 
-#include "./apps/tls_server/tls_server.hpp"
-#include "./apps/tls_client/tls_client.hpp"
-#include "./apps/tcp_proxy/tcp_proxy.hpp"
+#include "./ev_apps/tls_server/tls_server.hpp"
+#include "./ev_apps/tls_client/tls_client.hpp"
+#include "./ev_apps/tcp_proxy/tcp_proxy.hpp"
 
 #define MAX_CONFIG_DIR_PATH 256
 #define MAX_CONFIG_FILE_PATH 512

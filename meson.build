@@ -10,9 +10,9 @@ incdirs = include_directories(['./ev_sock/'])
 
 executable('tlspack.exe'
             , sources : [ './ev_sock/ev_socket.cpp'
-                          , './apps/tls_server/tls_server.cpp'
-                          , './apps/tls_client/tls_client.cpp'
-                          , './apps/tcp_proxy/tcp_proxy.cpp'
+                          , './ev_apps/tls_server/tls_server.cpp'
+                          , './ev_apps/tls_client/tls_client.cpp'
+                          , './ev_apps/tcp_proxy/tcp_proxy.cpp'
                           , 'main.cpp' ]
             , dependencies: [openssl, nlohmann_json_dep]
             , include_directories : [incdirs]
