@@ -1,7 +1,7 @@
 import sqlite3
 
-def create_tables():
-    conn = sqlite3.connect('tlspack.db')
+def create_tables(db_file):
+    conn = sqlite3.connect(db_file)
     c = conn.cursor()
 
     sql_query = ''' CREATE TABLE IF NOT EXISTS tasks

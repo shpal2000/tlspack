@@ -1,5 +1,7 @@
 *.pyc
+*.db
 
 build/
 subprojects/
 admin/__pycache__/
+admin/.pytest_cache__/

@@ -1,8 +1,19 @@
+from functools import lru_cache
+
 from fastapi.testclient import TestClient
 
-from .main import app
 
-client = TestClient(app)
+from . import main, config, crud
+
+client = TestClient(main.app)
+
+@lru_cache
+def get_settings():
+    settings = config.Settings(db_file='tlspack_test.db')
+    crud.create_tables (settings.db_file)
+    return settings
+
+main.app.dependency_overrides[main.get_settings] = get_settings 
 
 def test_start_cps():
     response = client.post('/start_cps', json={"runid" : "cps_trial", "cipher" : "AES128_SHA", "cps" : 10 })

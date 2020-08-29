@@ -1,20 +1,29 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI 
 from typing import Optional
 from pydantic import BaseModel
 
+from functools import lru_cache
+
+import pdb
+
 import sqlite3
-from .crud import create_tables
+from . import crud
+from . import config
 
 from fastapi.responses import ORJSONResponse
 from fastapi.responses import HTMLResponse
 
 app = FastAPI()
 
+@lru_cache
+def get_settings():
+    settings = config.Settings()
+    crud.create_tables (settings.db_file)
+    return settings
+
 @app.on_event("startup")
 def startup():
     print ("startup")
-    create_tables ()
-
 
 
 @app.on_event("shutdown")
@@ -30,8 +39,9 @@ class StopLoadParams(BaseModel):
     runid: str
 
 @app.post('/start_cps', response_class=ORJSONResponse)
-async def start_cps(params : CpsLoadParams):
-    conn = sqlite3.connect('tlspack.db')
+async def start_cps(params : CpsLoadParams
+                    , settings: config.Settings = Depends (get_settings)):
+    conn = sqlite3.connect(settings.db_file)
     c = conn.cursor()
     c.execute ('''INSERT INTO tasks (id, type)
                     VALUES (?, ?)''',  (params.runid, 'cps-run'))
@@ -40,8 +50,9 @@ async def start_cps(params : CpsLoadParams):
     return params
 
 @app.post('/stop', response_class=ORJSONResponse)
-async def stop(params : StopLoadParams):
-    conn = sqlite3.connect('tlspack.db')
+async def stop(params : StopLoadParams
+                , settings: config.Settings = Depends (get_settings)):
+    conn = sqlite3.connect(settings.db_file)
     c = conn.cursor()
     c.execute ('''DELETE FROM tasks 
                     WHERE id = ?''', (params.runid, ) )
@@ -50,9 +61,9 @@ async def stop(params : StopLoadParams):
     return params
 
 @app.get('/runs', response_class=ORJSONResponse)
-async def show_runs():
+async def show_runs(settings: config.Settings = Depends (get_settings)):
     runs = []
-    conn = sqlite3.connect('tlspack.db')
+    conn = sqlite3.connect(settings.db_file)
     c = conn.cursor()
     for row in c.execute ('''SELECT id FROM tasks'''):
         runs.append ({"runid" : row[0]})
