@@ -1,9 +1,8 @@
 from functools import lru_cache
-
 from fastapi.testclient import TestClient
+from .. import main, config, crud
 
-
-from . import main, config, crud
+import pdb
 
 client = TestClient(main.app)
 
@@ -22,7 +21,7 @@ def test_start_cps():
 
     response = client.get('/runs')
     assert response.status_code == 200
-    assert response.json() == [ {"runid" : "cps_trial" } ]
+    assert response.json() == [ "cps_trial" ]
 
 def test_stop():
     response = client.post('/stop', json={"runid" : "cps_trial"})

@@ -41,32 +41,18 @@ class StopLoadParams(BaseModel):
 @app.post('/start_cps', response_class=ORJSONResponse)
 async def start_cps(params : CpsLoadParams
                     , settings: config.Settings = Depends (get_settings)):
-    conn = sqlite3.connect(settings.db_file)
-    c = conn.cursor()
-    c.execute ('''INSERT INTO tasks (id, type)
-                    VALUES (?, ?)''',  (params.runid, 'cps-run'))
-    conn.commit()
-    conn.close()
+
+    crud.add_task(settings.db_file, params.runid, 'cps-run')
     return params
 
 @app.post('/stop', response_class=ORJSONResponse)
 async def stop(params : StopLoadParams
                 , settings: config.Settings = Depends (get_settings)):
-    conn = sqlite3.connect(settings.db_file)
-    c = conn.cursor()
-    c.execute ('''DELETE FROM tasks 
-                    WHERE id = ?''', (params.runid, ) )
-    conn.commit()
-    conn.close()
+
+    crud.del_task(settings.db_file, params.runid)
     return params
 
 @app.get('/runs', response_class=ORJSONResponse)
 async def show_runs(settings: config.Settings = Depends (get_settings)):
-    runs = []
-    conn = sqlite3.connect(settings.db_file)
-    c = conn.cursor()
-    for row in c.execute ('''SELECT id FROM tasks'''):
-        runs.append ({"runid" : row[0]})
-    conn.commit()
-    conn.close()
+    runs = crud.get_task_ids(settings.db_file)
     return runs
