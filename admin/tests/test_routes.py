@@ -19,15 +19,15 @@ def test_start_cps():
     assert response.status_code == 200
     assert response.json() == {"runid" : "cps_trial", "cipher" : "AES128_SHA", "cps" : 10 }
 
-    response = client.get('/runs')
+    response = client.get('/show_runs')
     assert response.status_code == 200
-    assert response.json() == [ "cps_trial" ]
+    assert response.json() == {'runs': [ {"id" : "cps_trial"} ]}
 
 def test_stop():
     response = client.post('/stop', json={"runid" : "cps_trial"})
     assert response.status_code == 200
     assert response.json() ==  {"runid" : "cps_trial" }
 
-    response = client.get('/runs')
+    response = client.get('/show_runs')
     assert response.status_code == 200
-    assert response.json() == []
+    assert response.json() == {'runs': []}

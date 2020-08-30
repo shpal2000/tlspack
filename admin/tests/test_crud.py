@@ -68,7 +68,7 @@ def test_del_task():
     assert count == 0
 
 
-def test_get_task_ids():
+def test_get_tasks():
     conn = sqlite3.connect('crud_test.db')
     c = conn.cursor()
 
@@ -94,4 +94,4 @@ def test_get_task_ids():
 
     conn.commit()
 
-    assert len(crud.get_task_ids ('crud_test.db')) == 3
+    assert len(crud.get_tasks ('crud_test.db')) == 3

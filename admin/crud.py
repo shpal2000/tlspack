@@ -32,13 +32,13 @@ def del_task(db_file, task_id):
     conn.commit()
     conn.close()
 
-def get_task_ids(db_file):
+def get_tasks(db_file):
     tasks = []
     conn = sqlite3.connect(db_file)
     c = conn.cursor()
 
     for row in c.execute ('''SELECT id FROM tasks'''):
-        tasks.append (row[0])
+        tasks.append ({"id" : row[0]})
                        
     conn.commit()
     conn.close()
