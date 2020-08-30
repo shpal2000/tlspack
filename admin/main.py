@@ -38,6 +38,23 @@ class CpsLoadParams(BaseModel):
 class StopLoadParams(BaseModel):
     runid: str
 
+@app.get('/index.html', response_class=HTMLResponse)
+@app.get('/index.htm', response_class=HTMLResponse)
+@app.get('/index', response_class=HTMLResponse)
+@app.get('/', response_class=HTMLResponse)
+def root(settings: config.Settings = Depends (get_settings)):
+    response = '''
+     <html>
+         <head>
+             <title>tlspack</title>
+         </head>
+         <body>
+             <h1>hello, from tlspack!</h1>
+         </body
+     </html>
+     '''
+    return HTMLResponse(content=response, status_code=200)
+
 @app.post('/start_cps', response_class=ORJSONResponse)
 async def start_cps(params : CpsLoadParams
                     , settings: config.Settings = Depends (get_settings)):
