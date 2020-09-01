@@ -1,4 +1,8 @@
 from fastapi import FastAPI, Depends, WebSocket, BackgroundTasks
+
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+
 from typing import Optional, List
 from pydantic import BaseModel
 
@@ -15,7 +19,13 @@ from . import config
 from fastapi.responses import ORJSONResponse
 from fastapi.responses import HTMLResponse
 
+
 app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+templates = Jinja2Templates(directory="templates")
+
 
 @lru_cache
 def get_settings():
